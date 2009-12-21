@@ -22,6 +22,8 @@ document.getElementById("results").innerHTML = html
 
 //-----------------------------------------------------------------------------
 function printResults(resultList, color, label, resultLabeller) {
+    if (!resultList.length) return ""
+    
     var html = "<div style='color:" + color + "'><h2>tests " + label + "</h2>\n<ul>\n"
     
     resultList.forEach(function(result) {

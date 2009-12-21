@@ -156,20 +156,20 @@ function runCatching(module, funcName, func, logger, results, options) {
         
         if (options && options.dontLogPass) return
         
-        logger.log(module.name + ":" + funcName + ": passed")
+        logger(module.name + ":" + funcName + ": passed")
         results.passed.push(result)
     }
     
     catch (e) {
         if (e.isAssertionError) {
             result.message = e.message
-            logger.log(module.name + ":" + funcName + ": failed: " + e.message)
+            logger(module.name + ":" + funcName + ": failed: " + e.message)
             results.failed.push(result)
         }
         else {
             result.error   = e.name
             result.message = e.message
-            logger.log(module.name + ":" + funcName + ": error: " + e.name + ": " + e.message)
+            logger(module.name + ":" + funcName + ": error: " + e.name + ": " + e.message)
             results.errored.push(result)
         }
     }

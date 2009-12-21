@@ -1,9 +1,8 @@
+// pre-reqs
 var assert = require("./mini-test").assert
 var DirectiveReader = require("../directive").DirectiveReader
 
-//-----------------------------------------------------------------------------
-// test suite name
-//-----------------------------------------------------------------------------
+// suite name
 exports.name = "test-parms"
 
 //-----------------------------------------------------------------------------

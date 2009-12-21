@@ -1,51 +1,60 @@
-//-----------------------------------------------------------------------------
-// test suite name
-//-----------------------------------------------------------------------------
-exports.name = "test-all"
-
-exports.testSuiteParms = require("./test-parms")
-
-//-----------------------------------------------------------------------------
-// main entry point
-//-----------------------------------------------------------------------------
-
-// get a console.log defined
+// are we running in a browser?
+var inBrowser
 try {
-    if (console.log) {}
+    if (window.console.log) {}
+    inBrowser = true
 }
 catch (e) {
-    sys = require("sys")
-    console = {log: sys.puts}
+    inBrowser = false
 }
 
+// platform specific functions
+if (inBrowser) {
+    function log(message) { console.log(message) }
+}
+
+else {
+    sys = require("sys")
+    log = sys.puts
+}
+
+// get the testing framework
 tester = require("./mini-test")
 
-var results = exports.results = tester.run(exports, console)
+// set the test name
+exports.name = "test-all"
 
-console.log("")
-console.log("test results")
-console.log("============================================")
+// set the suites to run
+exports.testSuiteParms = require("./test-parms")
+exports.testSuiteFiles = require("./test-files")
 
-console.log("")
-console.log("passed:")
-console.log("--------------------------------------------")
+// run the tests
+var results = exports.results = tester.run(exports, log)
+
+log("")
+log("test results")
+log("============================================")
+
+log("")
+log("passed:")
+log("--------------------------------------------")
 results.passed.forEach(function(result) {
-    console.log("   " + result.suiteName + ":" + result.funcName)
+    log("   " + result.suiteName + ":" + result.funcName)
 })
-if (!results.passed.length) console.log("   none")
+if (!results.passed.length) log("   none")
 
-console.log("")
-console.log("failed:")
-console.log("--------------------------------------------")
+log("")
+log("failed:")
+log("--------------------------------------------")
 results.failed.forEach(function(result) {
-    console.log("   " + result.suiteName + ":" + result.funcName + ": " + result.message)
+    log("   " + result.suiteName + ":" + result.funcName + ": " + result.message)
 })
-if (!results.failed.length) console.log("   none")
+if (!results.failed.length) log("   none")
 
-console.log("")
-console.log("errored:")
-console.log("--------------------------------------------")
+log("")
+log("errored:")
+log("--------------------------------------------")
 results.errored.forEach(function(result) {
-    console.log("   " + result.suiteName + ":" + result.funcName + ": " + result.error + ": " + result.message)
+    log("   " + result.suiteName + ":" + result.funcName + ": " + result.error + ": " + result.message)
 })
-if (!results.errored.length) console.log("   none")
+if (!results.errored.length) log("   none")

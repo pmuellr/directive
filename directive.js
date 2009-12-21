@@ -54,7 +54,6 @@ DirectiveReader.prototype.process = function process(handler) {
         if (typeof handler[method] != "function") {
             throw new Error(thisMethod + ": handler does not support the " + method + "() method")
         }
-        
     })
     
     // prep stuff
@@ -73,28 +72,27 @@ DirectiveReader.prototype.process = function process(handler) {
     }
 
     // call the fileBegin handler
-    handler.fileBegin({
+    handler.fileBegin.call(handler, {
         event:    "fileBegin",
-        fileName: this.fileName,
-        lineNo:   this.lineNo
+        fileName: this.fileName
     })
 
-    // setup the fileEnd handler argument
-    var fileEndArgument = {
-        event:    "fileEnd",
-        fileName: this.fileName,
-    }
+    var processingError
     
     // process the source
     try {
         this._process(handler)
     }
     catch (e) {
-        fileEndArgument.exception = e
+        processingError = e
     }
 
     // call the fileEnd handler
-    handler.fileEnd(fileEndArgument)
+    handler.fileEnd.call(handler, {
+        event:    "fileEnd",
+        fileName: this.fileName,
+        error:    processingError
+    })
 }
 
 //----------------------------------------------------------------------------
@@ -102,14 +100,16 @@ DirectiveReader.prototype._process = function _process(handler) {
     var inComment = false
     var inBody    = false
 
-    this._initDirectiveEvent()    
+    var patternComment   = /^[\/#].*/
+    var patternDirective = /^[\w\$@]+\s*(.*)\s*/
+    var patternBody      = /^\s+.*/
     
-    patternComment   = /^[\/#].*/
-    patternDirective = /^[^\/#].*/
-    this.localLineNo = 0
+    this._initDirective()
     
+    var localLineNo = 0
     this.lines.forEach(function processLine(line) {
-        this.localLineNo++
+        localLineNo++
+        
         var matchComment   = patternComment.exec(line)
         var matchDirective = patternDirective.exec(line)
         
@@ -117,7 +117,7 @@ DirectiveReader.prototype._process = function _process(handler) {
         if (inComment) {
             if (matchDirective) {
                 inComment = false
-                this._handleDirective(line)
+                this._setDirective(matchDirective[1], matchDirective[2], this.lineNo + localLineNo)
             }
             else {
                 this._addComment(line)
@@ -129,8 +129,14 @@ DirectiveReader.prototype._process = function _process(handler) {
         // already in a body
         if (inBody) {
             if (matchDirective) {
-                inBody = false
-                this._handleDirective(line)
+                this._handleDirective()
+                this._setDirective(matchDirective[1], matchDirective[2], this.lineNo + localLineNo)
+            }
+            else if (matchComment) {
+                inBody    = false
+                inComment = true
+                this._handleDirective()
+                this._addComment(line)
             }
             else {
                 this._addBody(line)
@@ -138,7 +144,8 @@ DirectiveReader.prototype._process = function _process(handler) {
             
             continue
         }
-        
+
+        //        
         if (matchComment) {
             inComment = true
             this._addComment(line)
@@ -147,7 +154,7 @@ DirectiveReader.prototype._process = function _process(handler) {
         
         if (matchDirective) {
             inBody = true
-            this._handleDirective(line)
+            this._setDirective(matchDirective[1], matchDirective[2], this.lineNo + localLineNo)
             continue
         }
 
@@ -156,37 +163,54 @@ DirectiveReader.prototype._process = function _process(handler) {
 }
 
 //----------------------------------------------------------------------------
-DirectiveReader.prototype._handleDirective = function _handleDirective(line) {
-    this.directiveEvent.lineNo = this.lineNo + this.localLineNo
-    this.directiveEvent.directive.line = line
+DirectiveReader.prototype._handleDirective = function _handleDirective(handler) {
+    var eventData = {
+        event:     "processDirective",
+        fileName:  this.fileName,
+        directive: this.currentDirective
+    }
+
+    var directiveName = this.currentDirective.name
     
-    // get directive name
-    
-    // invoke handler
-    
-    this._initDirectiveEvent()
+    if (this.directiveProcessors[directiveName]) {
+        this.directiveProcessors[directiveName].call(handler, eventData)
+    }
+    else {
+        handler.processDirective.call(handler, eventData)
+    }
+
+    this._initDirective()
+}
+
+//----------------------------------------------------------------------------
+DirectiveReader.prototype._currentDirective = function _currentDirective() {
+    return this.currentDirective
+}
+
+//----------------------------------------------------------------------------
+DirectiveReader.prototype._setDirective = function _setDirective(name, args, lineNo) {
+    this.currentDirective.name   = name
+    this.currentDirective.args   = args
+    this.currentDirective.lineNo = lineNo
 }
 
 //----------------------------------------------------------------------------
 DirectiveReader.prototype._addComment = function _addComment(line) {
-    this.directiveEvent.directive.comments.push(line)
+    this.currentDirective.comments.push(line)
 }
 
 //----------------------------------------------------------------------------
 DirectiveReader.prototype._addBody = function _addBody(line) {
-    this.directiveEvent.directive.body.push(line)
+    this.currentDirective.body.push(line)
 }
 
 //----------------------------------------------------------------------------
-DirectiveReader.prototype._initDirective = function _initDirectiveEvent() {
-    this.directiveEvent = {
-        event:    "directive",
-        fileName: this.fileName,
-        lineNo:   null,
-        directive: {
-            line: null,
-            comment: [],
-            body: []
-        }
+DirectiveReader.prototype._initDirective = function _initDirective() {
+    this.currentDirective = {
+        name:      null,
+        args:      null,
+        lineNo:    null,
+        comment:   [],
+        body:      []
     }
 }
