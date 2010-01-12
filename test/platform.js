@@ -22,52 +22,68 @@
 // THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-require.dir = "../"
+//------------------------------------------------------------------------------
+// defines:
+//
+// platform.readFile(fileName):
+//    reads the "file" and returns contents as string
+//
+// platform.log(message):
+//    writes a message to the standard output location
+//------------------------------------------------------------------------------
 
-var tester = require("test/test-all")
-
-var results = tester.results
-
-var html = ""
-
-html += printResults(results.errored, "#F00", "with errors",
-    function(result) { return ": " + result.error + ": " + result.message }
-)
-
-html += printResults(results.failed, "#CC0", "with failures",
-    function(result) { return ": " + result.message }
-)
-
-html += printResults(results.passed, "#0A0", "that passed",
-    function(result) { return ""}
-)
-
-document.getElementById("results").innerHTML = html
-
-//-----------------------------------------------------------------------------
-function printResults(resultList, color, label, resultLabeller) {
-    if (!resultList.length) return ""
-    
-    var html = "<div style='color:" + color + "'><h2>tests " + label + "</h2>\n<ul>\n"
-    
-    resultList.forEach(function(result) {
-        var message = result.suiteName + ":" + result.funcName
-        message += resultLabeller(result)
-        
-        html += "<li>" + escapeHTML(message) + "\n"
-    })
-    
-    if (!resultList.length) {
-        html += "<li>none\n"
-    }
-    
-    return html + "</ul>\n</div>\n"
+// are we running in a browser?
+var inBrowser = false
+try {
+    if (window.console.log) {}
+    inBrowser = true
+}
+catch (e) {
 }
 
-//-----------------------------------------------------------------------------
-function escapeHTML(string) {
-    return string.
-        replace("&", "&amp;").
-        replace("<", "&lt;").
-        replace(">", "&gt;")
+// are we running in a node.js?
+var inNode = false
+var posix
+var sys
+
+if (!inBrowser) {
+    try {
+       posix  = require("posix")
+       sys    = require("sys")
+       inNode = true
+    }
+    catch(e) {
+    }
+}
+
+// not in a supported platform
+if (!inBrowser && !inNode) {
+    throw new Error("unsupported platform")    
+}
+
+// definitions for browser
+if (inBrowser) {
+
+    exports.readFile = function(fileName) {
+        var xhr = new XMLHttpRequest()
+        xhr.open("GET", fileName, false)
+        xhr.send()
+        return xhr.responseText
+    }
+    
+    exports.log = function(message) {
+        console.log(message)
+    }
+}
+
+// definitions for node.js
+if (inNode) {
+    
+    exports.readFile = function(fileName) {
+        return posix.cat(fileName).wait()
+    }
+    
+    exports.log = function(message) {
+        sys.puts(message)
+    }
 }

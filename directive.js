@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 // The MIT License
 // 
-// Copyright (c) 2009 Patrick Mueller
+// Copyright (c) 2010 Patrick Mueller
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,26 @@
 // THE SOFTWARE.
 //----------------------------------------------------------------------------
 
+// var platform = require("./test/platform")
+
 //----------------------------------------------------------------------------
 // constructor
 //----------------------------------------------------------------------------
 var DirectiveReader = exports.DirectiveReader = function DirectiveReader(source, fileName, lineNo) {
-
     if (!source) throw new Error("source parameter is invalid")
     if (!fileName) throw new Error("fileName parameter is invalid")
     if (!lineNo) throw new Error("lineNo parameter is invalid")
     
     this.source   = source
-    this.fileName = fileName
-    this.lineNo   = lineNo
+    this.fileName = fileName || "unknown"
+    this.lineNo   = lineNo || 1
+}
+
+//----------------------------------------------------------------------------
+// pretty print object representation
+//----------------------------------------------------------------------------
+DirectiveReader.prototype.toString = function toString() {
+    return "DirectiveReader[" + this.fileName + ": " + this.lineNo + "]"
 }
 
 //----------------------------------------------------------------------------
@@ -50,14 +58,14 @@ DirectiveReader.prototype.process = function process(handler) {
     if (!handler) throw new Error(thisMethod + ": argument was null")
     
     var checkMethods = "processDirective fileBegin fileEnd"
-    checkMethods.split().forEach(function(method) {
+    checkMethods.split(" ").forEach(function(method) {
         if (typeof handler[method] != "function") {
             throw new Error(thisMethod + ": handler does not support the " + method + "() method")
         }
     })
     
     // prep stuff
-    this.lines = source.split("\n")
+    this.lines = this.source.split("\n")
     this.currLineNo = 0
 
     // build table of specific directive handlers
@@ -84,7 +92,12 @@ DirectiveReader.prototype.process = function process(handler) {
         this._process(handler)
     }
     catch (e) {
-        processingError = e
+        if (e.name == "DirectiveSyntaxError") {
+            processingError = { message: e.message }
+        }
+        else {
+            throw e
+        }
     }
 
     // call the fileEnd handler
@@ -101,20 +114,29 @@ DirectiveReader.prototype._process = function _process(handler) {
     var inBody    = false
 
     var patternComment   = /^[\/#].*/
-    var patternDirective = /^[\w\$@]+\s*(.*)\s*/
+    var patternDirective = /^([\w\$@]+)\s*(.*)\s*/
     var patternBody      = /^\s+.*/
     
     this._initDirective()
     
     var localLineNo = 0
-    this.lines.forEach(function processLine(line) {
+    for (var i=0; i<this.lines.length; i++) {
+        var line = this.lines[i]
+
         localLineNo++
         
         var matchComment   = patternComment.exec(line)
         var matchDirective = patternDirective.exec(line)
         
+        var isBlank = ("" == line.replace(/\s*(\S*)\s*/g, "$1"))
+        
         // already in a comment
         if (inComment) {
+            if (isBlank) {
+                this._addComment(line)
+                continue
+            }
+            
             if (matchDirective) {
                 inComment = false
                 this._setDirective(matchDirective[1], matchDirective[2], this.lineNo + localLineNo)
@@ -128,8 +150,13 @@ DirectiveReader.prototype._process = function _process(handler) {
         
         // already in a body
         if (inBody) {
+            if (isBlank) {
+                this._addBody(line)
+                continue
+            }
+            
             if (matchDirective) {
-                this._handleDirective()
+                this._handleDirective(handler)
                 this._setDirective(matchDirective[1], matchDirective[2], this.lineNo + localLineNo)
             }
             else if (matchComment) {
@@ -145,7 +172,6 @@ DirectiveReader.prototype._process = function _process(handler) {
             continue
         }
 
-        //        
         if (matchComment) {
             inComment = true
             this._addComment(line)
@@ -158,8 +184,17 @@ DirectiveReader.prototype._process = function _process(handler) {
             continue
         }
 
-        throw new Error("syntax error: unable to handle line: '" + line + "'")        
-    })
+        if (isBlank) continue
+        
+        throw {
+            name:    "DirectiveSyntaxError",
+            message: "unable to handle line: '" + line + "'"
+        }
+    }
+    
+    if (this.currentDirective.name) {
+        this._handleDirective(handler)
+    }
 }
 
 //----------------------------------------------------------------------------
@@ -210,7 +245,7 @@ DirectiveReader.prototype._initDirective = function _initDirective() {
         name:      null,
         args:      null,
         lineNo:    null,
-        comment:   [],
+        comments:  [],
         body:      []
     }
 }

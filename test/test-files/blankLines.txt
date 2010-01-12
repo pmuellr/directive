@@ -4,3 +4,7 @@
 
 EOF
 
+[
+    {"event":"fileBegin", "fileName":"test-files/blankLines.txt"},
+    {"event":"fileEnd",   "fileName":"test-files/blankLines.txt"}
+]

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // The MIT License
 // 
-// Copyright (c) 2009 Patrick Mueller
+// Copyright (c) 2010 Patrick Mueller
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -170,6 +170,9 @@ function runCatching(module, funcName, func, logger, results, options) {
             result.error   = e.name
             result.message = e.message
             logger(module.name + ":" + funcName + ": error: " + e.name + ": " + e.message)
+            if (e.stack) {
+                logger(e.stack)
+            }
             results.errored.push(result)
         }
     }

@@ -10,4 +10,9 @@
 *
 *
 
+EOF
 
+[
+    {"event":"fileBegin", "fileName":"test-files/justAComment.txt"},
+    {"event":"fileEnd",   "fileName":"test-files/justAComment.txt"}
+]
