@@ -28,7 +28,8 @@
 // constructor
 //----------------------------------------------------------------------------
 var DirectiveReader = exports.DirectiveReader = function DirectiveReader(source, fileName, lineNo) {
-    if (!source) throw new Error("source parameter is invalid")
+    
+    if ((source !== "") && !source) throw new Error("source parameter is invalid")
     if (!fileName) throw new Error("fileName parameter is invalid")
     if (!lineNo) throw new Error("lineNo parameter is invalid")
     
@@ -119,12 +120,9 @@ DirectiveReader.prototype._process = function _process(handler) {
     
     this._initDirective()
     
-    var localLineNo = 0
     for (var i=0; i<this.lines.length; i++) {
         var line = this.lines[i]
 
-        localLineNo++
-        
         var matchComment   = patternComment.exec(line)
         var matchDirective = patternDirective.exec(line)
         
@@ -138,8 +136,9 @@ DirectiveReader.prototype._process = function _process(handler) {
             }
             
             if (matchDirective) {
+                inBody    = true
                 inComment = false
-                this._setDirective(matchDirective[1], matchDirective[2], this.lineNo + localLineNo)
+                this._setDirective(matchDirective[1], matchDirective[2], this.lineNo + i)
             }
             else {
                 this._addComment(line)
@@ -157,12 +156,12 @@ DirectiveReader.prototype._process = function _process(handler) {
             
             if (matchDirective) {
                 this._handleDirective(handler)
-                this._setDirective(matchDirective[1], matchDirective[2], this.lineNo + localLineNo)
+                this._setDirective(matchDirective[1], matchDirective[2], this.lineNo + i)
             }
             else if (matchComment) {
                 inBody    = false
                 inComment = true
-                this._handleDirective()
+                this._handleDirective(handler)
                 this._addComment(line)
             }
             else {
@@ -180,7 +179,7 @@ DirectiveReader.prototype._process = function _process(handler) {
         
         if (matchDirective) {
             inBody = true
-            this._setDirective(matchDirective[1], matchDirective[2], this.lineNo + localLineNo)
+            this._setDirective(matchDirective[1], matchDirective[2], this.lineNo + i)
             continue
         }
 
@@ -188,7 +187,7 @@ DirectiveReader.prototype._process = function _process(handler) {
         
         throw {
             name:    "DirectiveSyntaxError",
-            message: "unable to handle line: '" + line + "'"
+            message: "unable to handle content on line " + (this.lineNo + i) + ": '" + line + "'"
         }
     }
     

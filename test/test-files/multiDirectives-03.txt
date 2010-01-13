@@ -1,0 +1,68 @@
+class: SomeClass << SomeSuperClass
+
+   something()
+   somethingElse()
+method __init__
+
+   initSomething()
+   initSomethingElse()
+staticMethod create
+
+    return new thisClass
+EOF
+
+[
+    {
+        "event": "fileBegin",
+        "fileName": "test-files/multiDirectives-03.txt"
+    },
+    {
+        "event": "processDirective",
+        "fileName": "test-files/multiDirectives-03.txt",
+        "directive": {
+            "name": "class",
+            "args": ": SomeClass << SomeSuperClass",
+            "lineNo": 1,
+            "comments": [],
+            "body": [
+                "",
+                "   something()",
+                "   somethingElse()"
+            ]
+        }
+    },
+    {
+        "event": "processDirective",
+        "fileName": "test-files/multiDirectives-03.txt",
+        "directive": {
+            "name": "method",
+            "args": "__init__",
+            "lineNo": 5,
+            "comments": [],
+            "body": [
+                "",
+                "   initSomething()",
+                "   initSomethingElse()"
+            ]
+        }
+    },
+    {
+        "event": "processDirective",
+        "fileName": "test-files/multiDirectives-03.txt",
+        "directive": {
+            "name": "staticMethod",
+            "args": "create",
+            "lineNo": 9,
+            "comments": [],
+            "body": [
+                "",
+                "    return new thisClass",
+                ""
+            ]
+        }
+    },
+    {
+        "event": "fileEnd",
+        "fileName": "test-files/multiDirectives-03.txt"
+    }
+]

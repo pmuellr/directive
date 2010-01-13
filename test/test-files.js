@@ -32,12 +32,26 @@ exports.name = "test-files"
 
 // files being tested
 var files = [
-    "blankLines",
-    "justAComment",
-    "justADirective"
+    "blankLines-01",
+    "blankLines-02",
+    "justAComment-01",
+    "justADirective-01",
+    "justADirective-02",
+    "justADirective-03",
+    "singleDirective-01",
+    "singleDirective-02",
+    "singleDirective-03",
+    "singleDirective-04",
+    "singleDirective-05",
+    "multiDirectives-01",
+    "multiDirectives-02",
+    "multiDirectives-03",
+    "multiDirectives-04",
+    null
 ]
 
 files.forEach(function(fileName) {
+    if (!fileName) return
     exports["test_" + fileName] = function() {
         testFile(fileName)
     }
@@ -77,10 +91,10 @@ function testFile(fileName) {
     dr.process(handler)
     
     var expected = JSON.parse(output)
-    expected     = JSON.stringify(expected)
-    var actual   = JSON.stringify(events)
+    expected     = JSON.stringify(expected, null, 4)
+    var actual   = JSON.stringify(events, null, 4)
     
-    assert.equal(expected, actual)
+    assert.equal("\n" + expected + "\n", "\n" + actual + "\n")
 }
 
 //-----------------------------------------------------------------------------

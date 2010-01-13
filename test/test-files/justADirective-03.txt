@@ -1,0 +1,29 @@
+
+aDirective: parm list
+
+EOF
+
+[
+    {
+        "event": "fileBegin",
+        "fileName": "test-files/justADirective-03.txt"
+    },
+    {
+        "event": "processDirective",
+        "fileName": "test-files/justADirective-03.txt",
+        "directive": {
+            "name": "aDirective",
+            "args": ": parm list",
+            "lineNo": 2,
+            "comments": [],
+            "body": [
+                "",
+                ""
+            ]
+        }
+    },
+    {
+        "event": "fileEnd",
+        "fileName": "test-files/justADirective-03.txt"
+    }
+]

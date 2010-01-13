@@ -1,0 +1,50 @@
+class: SomeClass << SomeSuperClass
+method __init__
+staticMethod create
+EOF
+
+[
+    {
+        "event": "fileBegin",
+        "fileName": "test-files/multiDirectives-04.txt"
+    },
+    {
+        "event": "processDirective",
+        "fileName": "test-files/multiDirectives-04.txt",
+        "directive": {
+            "name": "class",
+            "args": ": SomeClass << SomeSuperClass",
+            "lineNo": 1,
+            "comments": [],
+            "body": []
+        }
+    },
+    {
+        "event": "processDirective",
+        "fileName": "test-files/multiDirectives-04.txt",
+        "directive": {
+            "name": "method",
+            "args": "__init__",
+            "lineNo": 2,
+            "comments": [],
+            "body": []
+        }
+    },
+    {
+        "event": "processDirective",
+        "fileName": "test-files/multiDirectives-04.txt",
+        "directive": {
+            "name": "staticMethod",
+            "args": "create",
+            "lineNo": 3,
+            "comments": [],
+            "body": [
+                ""
+            ]
+        }
+    },
+    {
+        "event": "fileEnd",
+        "fileName": "test-files/multiDirectives-04.txt"
+    }
+]

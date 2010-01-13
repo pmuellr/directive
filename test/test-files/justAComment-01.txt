@@ -1,0 +1,24 @@
+/*
+ *
+ */
+
+#
+#
+#
+
+*
+*
+*
+
+EOF
+
+[
+    {
+        "event": "fileBegin",
+        "fileName": "test-files/justAComment-01.txt"
+    },
+    {
+        "event": "fileEnd",
+        "fileName": "test-files/justAComment-01.txt"
+    }
+]

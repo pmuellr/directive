@@ -1,0 +1,12 @@
+EOF
+
+[
+    {
+        "event": "fileBegin",
+        "fileName": "test-files/blankLines-01.txt"
+    },
+    {
+        "event": "fileEnd",
+        "fileName": "test-files/blankLines-01.txt"
+    }
+]

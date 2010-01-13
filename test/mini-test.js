@@ -163,13 +163,13 @@ function runCatching(module, funcName, func, logger, results, options) {
     catch (e) {
         if (e.isAssertionError) {
             result.message = e.message
-            logger(module.name + ":" + funcName + ": failed: " + e.message)
+            logger(module.name + ":" + funcName + ": failed")
             results.failed.push(result)
         }
         else {
             result.error   = e.name
             result.message = e.message
-            logger(module.name + ":" + funcName + ": error: " + e.name + ": " + e.message)
+            logger(module.name + ":" + funcName + ": error")
             if (e.stack) {
                 logger(e.stack)
             }

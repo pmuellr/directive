@@ -1,0 +1,96 @@
+
+//--------------------------------
+// my wonderful class
+//--------------------------------
+class: SomeClass << SomeSuperClass
+
+   something()
+   somethingElse()
+
+//--------------------------------
+// constructor
+//--------------------------------
+method __init__
+
+   initSomething()
+   initSomethingElse()
+   
+//--------------------------------
+// return a new instance of this class
+//--------------------------------
+staticMethod create
+
+    return new thisClass
+
+EOF
+
+[
+    {
+        "event": "fileBegin",
+        "fileName": "test-files/multiDirectives-02.txt"
+    },
+    {
+        "event": "processDirective",
+        "fileName": "test-files/multiDirectives-02.txt",
+        "directive": {
+            "name": "class",
+            "args": ": SomeClass << SomeSuperClass",
+            "lineNo": 5,
+            "comments": [
+                "//--------------------------------",
+                "// my wonderful class",
+                "//--------------------------------"
+            ],
+            "body": [
+                "",
+                "   something()",
+                "   somethingElse()",
+                ""
+            ]
+        }
+    },
+    {
+        "event": "processDirective",
+        "fileName": "test-files/multiDirectives-02.txt",
+        "directive": {
+            "name": "method",
+            "args": "__init__",
+            "lineNo": 13,
+            "comments": [
+                "//--------------------------------",
+                "// constructor",
+                "//--------------------------------"
+            ],
+            "body": [
+                "",
+                "   initSomething()",
+                "   initSomethingElse()",
+                "   "
+            ]
+        }
+    },
+    {
+        "event": "processDirective",
+        "fileName": "test-files/multiDirectives-02.txt",
+        "directive": {
+            "name": "staticMethod",
+            "args": "create",
+            "lineNo": 21,
+            "comments": [
+                "//--------------------------------",
+                "// return a new instance of this class",
+                "//--------------------------------"
+            ],
+            "body": [
+                "",
+                "    return new thisClass",
+                "",
+                ""
+            ]
+        }
+    },
+    {
+        "event": "fileEnd",
+        "fileName": "test-files/multiDirectives-02.txt"
+    }
+]

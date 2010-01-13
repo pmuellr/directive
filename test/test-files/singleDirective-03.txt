@@ -1,0 +1,35 @@
+// comment 1
+// comment 2
+aDirective: parm list
+   body 1
+   body 2
+EOF
+
+[
+    {
+        "event": "fileBegin",
+        "fileName": "test-files/singleDirective-03.txt"
+    },
+    {
+        "event": "processDirective",
+        "fileName": "test-files/singleDirective-03.txt",
+        "directive": {
+            "name": "aDirective",
+            "args": ": parm list",
+            "lineNo": 3,
+            "comments": [
+                "// comment 1",
+                "// comment 2"
+            ],
+            "body": [
+                "   body 1",
+                "   body 2",
+                ""
+            ]
+        }
+    },
+    {
+        "event": "fileEnd",
+        "fileName": "test-files/singleDirective-03.txt"
+    }
+]

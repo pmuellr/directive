@@ -1,0 +1,50 @@
+aDirective1: parm1 list1
+aDirective2: parm2 list2
+aDirective3: parm3 list3
+EOF
+
+[
+    {
+        "event": "fileBegin",
+        "fileName": "test-files/multiDirectives-01.txt"
+    },
+    {
+        "event": "processDirective",
+        "fileName": "test-files/multiDirectives-01.txt",
+        "directive": {
+            "name": "aDirective1",
+            "args": ": parm1 list1",
+            "lineNo": 1,
+            "comments": [],
+            "body": []
+        }
+    },
+    {
+        "event": "processDirective",
+        "fileName": "test-files/multiDirectives-01.txt",
+        "directive": {
+            "name": "aDirective2",
+            "args": ": parm2 list2",
+            "lineNo": 2,
+            "comments": [],
+            "body": []
+        }
+    },
+    {
+        "event": "processDirective",
+        "fileName": "test-files/multiDirectives-01.txt",
+        "directive": {
+            "name": "aDirective3",
+            "args": ": parm3 list3",
+            "lineNo": 3,
+            "comments": [],
+            "body": [
+                ""
+            ]
+        }
+    },
+    {
+        "event": "fileEnd",
+        "fileName": "test-files/multiDirectives-01.txt"
+    }
+]
