@@ -32,8 +32,9 @@ tester = require("./mini-test")
 exports.name = "test-all"
 
 // set the suites to run
-exports.testSuiteParms = require("./test-parms")
-exports.testSuiteFiles = require("./test-files")
+exports.testSuiteParms           = require("./test-parms")
+exports.testSuiteFiles           = require("./test-files")
+exports.testSuiteHandleDirective = require("./test-handleDirective")
 
 // run the tests
 var results = exports.results = tester.run(exports, log)

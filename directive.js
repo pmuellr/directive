@@ -22,16 +22,14 @@
 // THE SOFTWARE.
 //----------------------------------------------------------------------------
 
-// var platform = require("./test/platform")
-
 //----------------------------------------------------------------------------
 // constructor
 //----------------------------------------------------------------------------
 var DirectiveReader = exports.DirectiveReader = function DirectiveReader(source, fileName, lineNo) {
     
     if ((source !== "") && !source) throw new Error("source parameter is invalid")
-    if (!fileName) throw new Error("fileName parameter is invalid")
-    if (!lineNo) throw new Error("lineNo parameter is invalid")
+    if (!fileName) fileName = "unknown"
+    if (!lineNo) lineNo = 1
     
     this.source   = source
     this.fileName = fileName || "unknown"
@@ -72,7 +70,7 @@ DirectiveReader.prototype.process = function process(handler) {
     // build table of specific directive handlers
     this.directiveProcessors = {}
     for (var method in handler) {
-        if (typeof method != "function") continue
+        if (typeof handler[method] != "function") continue
         
         var match = method.match("^handleDirective_(.*)")
         if (!match) continue
