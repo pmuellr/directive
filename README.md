@@ -15,7 +15,7 @@ Patrick Mueller
 Summary
 -------
 
-`directive` is a code templating system based on the 
+`directive` is a code parsing system based on the 
 recognition that most programs tend to be structured as a set
 of blocks of the form:
 
