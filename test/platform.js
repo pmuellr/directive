@@ -33,23 +33,14 @@
 //------------------------------------------------------------------------------
 
 // are we running in a browser?
-var inBrowser = false
-try {
-    if (window.console.log) {}
-    inBrowser = true
-}
-catch (e) {
-}
+var inBrowser = (typeof window != "undefined")
 
 // are we running in a node.js?
 var inNode = false
-var posix
-var sys
 
 if (!inBrowser) {
     try {
-       posix  = require("posix")
-       sys    = require("sys")
+       require("fs")
        inNode = true
     }
     catch(e) {
@@ -79,11 +70,13 @@ if (inBrowser) {
 // definitions for node.js
 if (inNode) {
     
+    var fs = require("fs")
+    
     exports.readFile = function(fileName) {
-        return posix.cat(fileName).wait()
+        return fs.readFileSync(fileName, "utf8")
     }
     
     exports.log = function(message) {
-        sys.puts(message)
+        console.log(message)
     }
 }
