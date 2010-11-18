@@ -109,7 +109,7 @@ DirectiveReader.prototype.process = function process(handler) {
 
 //----------------------------------------------------------------------------
 DirectiveReader.prototype._process = function _process(handler) {
-    var inComment = false
+    var inComment = true
     var inBody    = false
 
     var patternComment   = /^[\/#].*/
