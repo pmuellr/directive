@@ -15,7 +15,9 @@ EOF
             "name": "aDirective",
             "args": ": parm list",
             "lineNo": 2,
-            "comments": [],
+            "comments": [
+                ""
+            ],
             "body": [
                 "",
                 ""

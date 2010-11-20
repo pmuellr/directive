@@ -37,6 +37,7 @@ EOF
             "args": ": SomeClass << SomeSuperClass",
             "lineNo": 5,
             "comments": [
+                "",
                 "//--------------------------------",
                 "// my wonderful class",
                 "//--------------------------------"
