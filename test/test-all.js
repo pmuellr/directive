@@ -24,9 +24,6 @@
 // THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-var platform = require("./platform")
-log = platform.log
-
 // get the testing framework
 tester = require("./mini-test")
 
@@ -68,3 +65,9 @@ results.errored.forEach(function(result) {
     log("   " + result.suiteName + ":" + result.funcName + ": " + result.error + ": " + result.message)
 })
 if (!results.errored.length) log("   none")
+
+//-----------------------------------------------------------------------------
+function log(message) {
+    console.log(message)
+}
+
