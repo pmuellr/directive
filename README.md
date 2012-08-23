@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/pmuellr/directive.png)](http://travis-ci.org/pmuellr/directive)
 <style>
 pre {
     background-color: #EEE;
