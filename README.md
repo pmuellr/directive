@@ -1,11 +1,4 @@
 [![build status](https://secure.travis-ci.org/pmuellr/directive.png)](http://travis-ci.org/pmuellr/directive)
-<style>
-pre {
-    background-color: #EEE;
-    margin-left:      2em;
-    padding:          0.5em;
-}
-</style>
 
 directive
 =================================
