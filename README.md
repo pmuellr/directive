@@ -1,8 +1,7 @@
 directive
 =================================
 
-Patrick Mueller  
-[pmuellr@gmail.com](mailto:pmuellr@gmail.com)
+Patrick Mueller - [pmuellr@gmail.com](mailto:pmuellr@gmail.com)
 
 [![build status](https://secure.travis-ci.org/pmuellr/directive.png)](http://travis-ci.org/pmuellr/directive)
 
